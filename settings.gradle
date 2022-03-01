@@ -1,0 +1,3 @@
+include ':jscall'
+include ':app'
+rootProject.name = "webSample"
