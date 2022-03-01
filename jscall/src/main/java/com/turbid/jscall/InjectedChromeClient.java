@@ -6,13 +6,15 @@ import android.webkit.JsResult;
 import android.webkit.WebView;
 
 import com.just.agentweb.WebChromeClient;
+import com.turbid.jscall.listener.JsCallAppListener;
 
-public class InjectedChromeClient extends WebChromeClient {
+public class InjectedChromeClient extends WebChromeClient implements JsCallAppListener {
     private final String TAG = "InjectedChromeClient";
     private JsCallJava mJsCallJava;
     private boolean mIsInjectedJS;
 
     public InjectedChromeClient (String injectedName, HostJsScope injectedCls) {
+        injectedCls.setonJsCallAppListener(this);
         mJsCallJava = new JsCallJava(injectedName, injectedCls);
     }
 
@@ -47,5 +49,10 @@ public class InjectedChromeClient extends WebChromeClient {
         Log.e("ImeClient..onJsPrompt",message);
         result.confirm(mJsCallJava.call(view, message));
         return true;
+    }
+
+    @Override
+    public void onJsCall(String type, String json, JsCallback jsCallback) {
+
     }
 }

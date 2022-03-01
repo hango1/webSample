@@ -1,18 +1,16 @@
 package com.turbid.jscall;
 
 import android.util.Log;
-import android.view.View;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.WebView;
-import android.widget.ProgressBar;
 
 import com.turbid.jscall.listener.CustomChromeListener;
 
 
 public class CustomChromeClient extends InjectedChromeClient {
 
-    private boolean isFrist = true;
+    private boolean isFirst = true;
     private CustomChromeListener listener;
     public void setOnCustomChromeListener(CustomChromeListener listener) {
         this.listener = listener;
@@ -41,14 +39,14 @@ public class CustomChromeClient extends InjectedChromeClient {
             listener.onProgressChanged(view,newProgress);
         }
         if (newProgress == 100) {
-            if (isFrist) {
+            if (isFirst) {
                 view.post(new Runnable() {
                     @Override
                     public void run() {
                         view.loadUrl("javascript:apiReady()");
                     }
                 });
-                isFrist = false;
+                isFirst = false;
             }
         }
     }
@@ -63,5 +61,12 @@ public class CustomChromeClient extends InjectedChromeClient {
     @Override
     public void onReceivedTitle(WebView view, String title) {
         super.onReceivedTitle(view, title);
+        listener.onReceivedTitle(view,title);
+    }
+
+    @Override
+    public void onJsCall(String type, String json, JsCallback jsCallback) {
+        super.onJsCall(type, json, jsCallback);
+        listener.onJsCall(type, json, jsCallback);
     }
 }
